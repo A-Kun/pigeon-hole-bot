@@ -81,4 +81,18 @@ def main():
 
 
 if __name__ == '__main__':
+    from tornado import web, ioloop, httpserver
+    class RootHandler(web.RequestHandler):
+        def set_default_headers(self):
+            self.set_header("Access-Control-Allow-Origin", "*")
+
+        def get(self):
+            self.finish({'msg': 'service up and running'})
+
+        def post(self):
+            self.finish({'msg': 'service up and running'})
+    port = int(os.environ.get("PORT", 8080))
+    app = web.Application(handlers=[(r'/', RootHandler)])
+    http_server = httpserver.HTTPServer(app)
+    http_server.listen(port)
     main()
