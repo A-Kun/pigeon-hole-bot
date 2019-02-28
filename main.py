@@ -55,7 +55,8 @@ def get_pic_list(path):
         for file in files:
             if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
                 file_path = os.path.join(root, file)
-                if "KB" in file_size(file_path):
+                size = file_size(file_path)
+                if "KB" in size and float(size.split()[0]) <= 756:
                     result.append(file_path)
     return result
 
