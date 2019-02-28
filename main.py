@@ -56,7 +56,7 @@ def echo(bot, update):
     if '色图' in update.message.text:
         pic_list = get_pic_list("../pigeon-hole-bot-media")
         if len(pic_list) > 0:
-            with open(random.choice(pic_list), "rb")) as pic:
+            with open(random.choice(pic_list), "rb") as pic:
                 bot.send_photo(chat_id=update.message.chat_id, photo=pic)
 
 
