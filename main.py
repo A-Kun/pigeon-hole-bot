@@ -32,9 +32,10 @@ logger = logging.getLogger(__name__)
 
 def get_pic_list(path):
     result = []
-    for file in os.listdir(path):
-        if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
-            result.append(os.path.join(path, file))
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
+                result.append(os.path.join(root, file))
     return result
 
 
@@ -54,7 +55,9 @@ def echo(bot, update):
     """Echo the user message."""
     if '色图' in update.message.text:
         pic_list = get_pic_list("../pigeon-hole-bot-media")
-        bot.send_photo(chat_id=update.message.chat_id, photo=open(random.choice(pic_list), "rb"))
+        if len(pic_list) > 0:
+            with open(random.choice(pic_list), "rb")) as pic:
+                bot.send_photo(chat_id=update.message.chat_id, photo=pic)
 
 
 def error(bot, update):
