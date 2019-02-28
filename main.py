@@ -18,6 +18,8 @@ bot.
 """
 
 import logging
+import os
+import random
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -26,6 +28,13 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+
+def get_pic_list(path):
+    result = []
+    for file in os.listdir(path):
+        if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
+            result.append(os.path.join(path, file))
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -43,7 +52,8 @@ def help(bot, update):
 def echo(bot, update):
     """Echo the user message."""
     if '色图' in update.message.text:
-        bot.send_photo(chat_id=update.message.chat_id, photo='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/2560px-Google_2015_logo.svg.png')
+        pic_list = get_pic_list("../pigeon-hole-bot-media")
+        bot.send_photo(chat_id=update.message.chat_id, photo=open(random.choice(pic_list), "rb"))
 
 
 def error(bot, update):
