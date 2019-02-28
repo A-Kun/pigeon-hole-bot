@@ -35,6 +35,7 @@ def get_pic_list(path):
     for file in os.listdir(path):
         if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
             result.append(os.path.join(path, file))
+    return result
 
 
 # Define a few command handlers. These usually take the two arguments bot and
