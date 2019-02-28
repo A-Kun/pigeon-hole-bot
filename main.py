@@ -43,7 +43,7 @@ def help(bot, update):
 def echo(bot, update):
     """Echo the user message."""
     if '色图' in update.message.text:
-        bot.send_message(chat_id=update.message.chat_id, text='色图')
+        bot.send_photo(chat_id=update.message.chat_id, photo='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/2560px-Google_2015_logo.svg.png')
 
 
 def error(bot, update):
