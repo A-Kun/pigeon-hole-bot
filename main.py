@@ -75,11 +75,10 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    if '色图' in update.message.text:
-        pic_list = get_pic_list("../pigeon-hole-bot-media")
-        if len(pic_list) > 0:
-            with open(random.choice(pic_list), "rb") as pic:
-                bot.send_photo(chat_id=update.message.chat_id, photo=pic)
+    pic_list = get_pic_list("../pigeon-hole-bot-media")
+    if len(pic_list) > 0:
+        with open(random.choice(pic_list), "rb") as pic:
+            bot.send_photo(chat_id=update.message.chat_id, photo=pic)
 
 
 def error(bot, update):
@@ -92,7 +91,8 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("779535573:AAH-mPuQLTPn5XHU_hQ-lMd53YKi6_1zZCY")
+    with open('.env') as env:
+        updater = Updater(env.read().strip())
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -100,9 +100,10 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("色图", echo))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    # dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
     dp.add_error_handler(error)
