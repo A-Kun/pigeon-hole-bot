@@ -20,6 +20,8 @@ bot.
 import logging
 import os
 import random
+import re
+import requests
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -61,6 +63,15 @@ def get_pic_list(path):
     return result
 
 
+def get_remote_image_url():
+    content = requests.get('https://yande.re/post/popular_recent').content.decode('utf-8')
+    all_pics = re.findall('id="p(\d+)"', content)
+    pic = random.choice(all_pics)
+    content = requests.get('https://yande.re/post/show/' + pic).content.decode('utf-8')
+    image_url = re.findall('src="(https://files.yande.re/.+)"', content)[0]
+    return image_url
+
+
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
@@ -75,10 +86,14 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    pic_list = get_pic_list("../pigeon-hole-bot-media")
-    if len(pic_list) > 0:
-        with open(random.choice(pic_list), "rb") as pic:
-            bot.send_photo(chat_id=update.message.chat_id, photo=pic)
+    if (random.random() < 0.5):
+        pic_list = get_pic_list("../pigeon-hole-bot-media")
+        if len(pic_list) > 0:
+            with open(random.choice(pic_list), "rb") as pic:
+                bot.send_photo(chat_id=update.message.chat_id, photo=pic)
+    else:
+        image_url = get_remote_image_url()
+        bot.send_photo(chat_id=update.message.chat_id, photo=image_url)
 
 
 def error(bot, update):
