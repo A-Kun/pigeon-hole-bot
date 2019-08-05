@@ -13,37 +13,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def convert_bytes(num):
-    """
-    this function will convert bytes to MB.... GB... etc
-    """
-    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
-        if num < 1024.0:
-            return "%3.1f %s" % (num, x)
-        num /= 1024.0
-
-
-def file_size(file_path):
-    """
-    this function will return the file size
-    """
-    if os.path.isfile(file_path):
-        file_info = os.stat(file_path)
-        return convert_bytes(file_info.st_size)
-
-
-def get_pic_list(path):
-    result = []
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith(".png"):
-                file_path = os.path.join(root, file)
-                size = file_size(file_path)
-                if "KB" in size and float(size.split()[0]) <= 756:
-                    result.append(file_path)
-    return result
-
-
 def get_remote_image_url():
     content = requests.get('https://yande.re/post/popular_recent').content.decode('utf-8')
     all_pics = re.findall('id="p(\d+)"', content)
@@ -65,15 +34,9 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Help!')
 
 
-def setu(bot, update):
-    if (random.random() < 0.5):
-        pic_list = get_pic_list("../pigeon-hole-bot-media")
-        if len(pic_list) > 0:
-            with open(random.choice(pic_list), "rb") as pic:
-                bot.send_photo(chat_id=update.message.chat_id, photo=pic)
-    else:
-        image_url = get_remote_image_url()
-        bot.send_photo(chat_id=update.message.chat_id, photo=image_url)
+def send_pic(bot, update):
+    image_url = get_remote_image_url()
+    bot.send_photo(chat_id=update.message.chat_id, photo=image_url)
 
 
 def error(bot, update):
@@ -92,7 +55,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("色图", setu))
+    dp.add_handler(CommandHandler("色图", send_pic))
 
     # log all errors
     dp.add_error_handler(error)
