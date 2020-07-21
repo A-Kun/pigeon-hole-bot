@@ -39,6 +39,10 @@ def send_pic(bot, update):
     bot.send_photo(chat_id=update.message.chat_id, photo=image_url)
 
 
+def chat_id(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text=update.message.chat_id)
+
+
 def error(bot, update):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
@@ -56,6 +60,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("色图", send_pic))
+    dp.add_handler(CommandHandler("chat_id", chat_id))
 
     # log all errors
     dp.add_error_handler(error)
